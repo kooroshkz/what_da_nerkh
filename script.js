@@ -7,12 +7,14 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("price.json") // Fetch from static JSON file
             .then(response => response.json())
             .then(data => {
+                console.log("📥 Fetched price from JSON:", data);
                 if (data.price) {
                     priceDisplay.textContent = data.price;
                     tomanInput.value = euroInput.value * data.price;
                 }
             })
-            .catch(() => {
+            .catch((error) => {
+                console.error("❌ Error fetching price:", error);
                 priceDisplay.textContent = "Error fetching price";
             });
     }
