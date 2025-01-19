@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euro to Toman Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Euro to Toman Converter</h1>
+        <div class="converter">
+            <label for="euro">Euro:</label>
+            <input type="number" id="euro" value="1" step="0.01">
+            <label for="toman">Toman:</label>
+            <input type="number" id="toman" step="0.01">
+        </div>
+        <p>Live Euro Price: <span id="price">{{ price }}</span> Toman</p>
+    </div>
+</body>
+</html>
