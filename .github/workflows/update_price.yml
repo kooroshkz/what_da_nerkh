@@ -2,8 +2,8 @@ name: Update Euro Price
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Runs once per day at midnight UTC
-  workflow_dispatch:  # Allows manual trigger via API
+    - cron: "0 0 * * *"  # Runs daily at midnight UTC
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   scrape:
@@ -25,8 +25,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
           git add price.json
           git commit -m "Updated Euro price" || echo "No changes to commit"
-          git push
+          git push origin main || echo "No changes to push"
