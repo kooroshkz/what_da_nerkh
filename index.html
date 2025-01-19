@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Euro to Toman Converter</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
 <body>
     <div class="container">
@@ -16,7 +16,7 @@
             <label for="toman">Toman:</label>
             <input type="number" id="toman" step="0.01">
         </div>
-        <p>Live Euro Price: <span id="price">{{ price }}</span> Toman</p>
+        <p>Live Euro Price: <span id="price">Loading...</span> Toman</p>
     </div>
 </body>
 </html>
