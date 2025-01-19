@@ -2,8 +2,8 @@ name: Update Euro Price
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Runs daily at midnight UTC
-  repository_dispatch:  # Allows external trigger from JavaScript
+    - cron: "0 0 * * *"  # Runs once per day at midnight UTC
+  workflow_dispatch:  # Allows manual trigger via API
 
 jobs:
   scrape:
