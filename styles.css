@@ -1,56 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
 * {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    background: #161623;
 }
 
 .container {
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    padding: 30px;
-    text-align: center;
-    width: 350px;
-}
-
-h1 {
-    font-size: 24px;
-    margin-bottom: 15px;
-}
-
-.converter {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1200px;
 }
 
-label {
-    font-size: 16px;
-    font-weight: bold;
+.card {
+    width: 300px;
+    height: 250px;
+    margin: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    font-size: 30px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 20px;
+    color: #fff;
 }
 
 input {
-    border: none;
-    border-radius: 10px;
-    font-size: 18px;
-    padding: 10px;
-    text-align: center;
     width: 100%;
-    background: rgba(255, 255, 255, 0.6);
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
 }
 
-p {
-    font-size: 16px;
-    margin-top: 20px;
+input:focus {
+    outline: none;
 }

@@ -4,19 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Euro to Toman Converter</title>
-    <link rel="stylesheet" href="style.css">
-    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Euro to Toman Converter</h1>
-        <div class="converter">
-            <label for="euro">Euro:</label>
-            <input type="number" id="euro" value="1" step="0.01">
-            <label for="toman">Toman:</label>
-            <input type="number" id="toman" step="0.01">
+        <div class="card">
+            <div class="content">
+                <h2>€ → T</h2>
+                <h3>Convert Euro to Toman</h3>
+                <input type="number" id="euroInput" placeholder="Enter EUR" oninput="convertToToman()">
+                <p>=</p>
+                <input type="text" id="tomanOutput" readonly>
+            </div>
         </div>
-        <p>Live Euro Price: <span id="price">Loading...</span> Toman</p>
+
+        <div class="card">
+            <div class="content">
+                <h2>T → €</h2>
+                <h3>Convert Toman to Euro</h3>
+                <input type="number" id="tomanInput" placeholder="Enter Toman" oninput="convertToEuro()">
+                <p>=</p>
+                <input type="text" id="euroOutput" readonly>
+            </div>
+        </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,31 +1,24 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let euroInput = document.getElementById("euro");
-    let tomanInput = document.getElementById("toman");
-    let priceDisplay = document.getElementById("price");
+let exchangeRate = 87120; // Default value
 
-    function fetchPrice() {
-        fetch("price.json") // Fetch from static JSON file
-            .then(response => response.json())
-            .then(data => {
-                console.log("📥 Fetched price from JSON:", data);
-                if (data.price) {
-                    priceDisplay.textContent = data.price;
-                    tomanInput.value = euroInput.value * data.price;
-                }
-            })
-            .catch((error) => {
-                console.error("❌ Error fetching price:", error);
-                priceDisplay.textContent = "Error fetching price";
-            });
+async function fetchExchangeRate() {
+    try {
+        const response = await fetch('exchange_rate.json');
+        const data = await response.json();
+        exchangeRate = data.rate;
+    } catch (error) {
+        console.error("Error fetching exchange rate:", error);
     }
+}
 
-    euroInput.addEventListener("input", () => {
-        tomanInput.value = (euroInput.value * parseFloat(priceDisplay.textContent)).toFixed(2);
-    });
+function convertToToman() {
+    const euro = document.getElementById('euroInput').value;
+    document.getElementById('tomanOutput').value = (euro * exchangeRate).toLocaleString();
+}
 
-    tomanInput.addEventListener("input", () => {
-        euroInput.value = (tomanInput.value / parseFloat(priceDisplay.textContent)).toFixed(2);
-    });
+function convertToEuro() {
+    const toman = document.getElementById('tomanInput').value;
+    document.getElementById('euroOutput').value = (toman / exchangeRate).toFixed(2);
+}
 
-    fetchPrice();
-});
+// Fetch latest rate on page load
+fetchExchangeRate();

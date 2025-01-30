@@ -1,43 +1,48 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import os
+from datetime import datetime
+from github import Github
 
-URL = "https://www.tgju.org/profile/price_eur"
-HEADERS = {"User-Agent": "Mozilla/5.0"}
+# Load GitHub token from environment variables
+ GH_PAT  = os.getenv(" GH_PAT ")
+REPO_NAME = os.getenv("REPO_NAME")  # Example: "yourusername/exchange-rate-repo"
 
-def fetch_euro_price():
-    print("Fetching Euro price from:", URL)
-    
-    response = requests.get(URL, headers=HEADERS)
+def get_euro_to_toman():
+    url = "https://www.tgju.org/profile/price_eur"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers)
     
     if response.status_code == 200:
-        soup = BeautifulSoup(response.text, "html.parser")
-        price_tag = soup.find("span", {"data-col": "info.last_trade.PDrCotVal"})
-        
-        if price_tag:
-            price = price_tag.text.replace(",", "").strip()
-            print("Scraped price:", price)
-            return int(price) // 10  # Remove last digit
-        else:
-            print("❌ Error: Could not find price tag.")
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find("span", {"data-col": "info.last_trade.PDrCotVal"}).text.replace(",", "")
+        return int(price) / 10  # Convert Rials to Tomans
     else:
-        print(f"❌ HTTP Error: {response.status_code}")
+        print("Failed to fetch data")
+        return None
 
-    return None
+def update_json(rate):
+    data = {"rate": rate, "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+    
+    with open("exchange_rate.json", "w") as file:
+        json.dump(data, file, indent=4)
 
-# Fetch price
-price = fetch_euro_price()
+def commit_to_github():
+    g = Github( GH_PAT )
+    repo = g.get_repo(REPO_NAME)
+    
+    with open("exchange_rate.json", "r") as file:
+        content = file.read()
+    
+    try:
+        contents = repo.get_contents("exchange_rate.json")
+        repo.update_file(contents.path, "Update exchange rate", content, contents.sha)
+    except:
+        repo.create_file("exchange_rate.json", "Create exchange rate file", content)
 
-# Debugging: Print output for GitHub Actions
-print("Fetched Price:", price)
-
-if price:
-    print("✅ Saving price to price.json")
-    with open("price.json", "w") as file:
-        json.dump({"price": price}, file, indent=4)
-else:
-    print("❌ Failed to fetch price")
-
-# Check if the file was written correctly
-with open("price.json", "r") as file:
-    print("🔍 price.json content:", file.read())
+if __name__ == "__main__":
+    rate = get_euro_to_toman()
+    if rate:
+        update_json(rate)
+        commit_to_github()
