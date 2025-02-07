@@ -11,8 +11,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     min-height: 100vh;
     background: #161623;
+    color: white;
 }
 
 .container {
@@ -20,36 +22,42 @@ body {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    max-width: 1200px;
+    max-width: 400px;
 }
 
 .card {
-    width: 300px;
-    height: 250px;
-    margin: 20px;
+    width: 100%;
+    padding: 20px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     text-align: center;
-    padding: 20px;
     box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 h2 {
-    font-size: 30px;
-    color: #fff;
+    font-size: 26px;
     margin-bottom: 10px;
 }
 
 h3 {
-    font-size: 20px;
-    color: #fff;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    margin: 15px 0;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
 }
 
 input {
     width: 100%;
     padding: 10px;
-    margin-top: 10px;
     border: none;
     border-radius: 5px;
     font-size: 16px;
@@ -58,4 +66,18 @@ input {
 
 input:focus {
     outline: none;
+    border: 2px solid #ffffff;
+}
+
+.equals {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 10px 0;
+}
+
+.update-info {
+    margin-top: 20px;
+    font-size: 14px;
+    color: white;
 }
