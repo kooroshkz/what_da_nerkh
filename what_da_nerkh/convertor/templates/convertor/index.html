@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="/static/convertor/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="content">
+                <h2>What da Nerkh</h2>
+                <h3>Currency Convertor</h3>
+                <div class="input-group">
+                    <label for="fromAmount">Amount</label>
+                    <input type="number" id="fromAmount" value="1" min="0" step="any" placeholder="Enter amount">
+                </div>
+                <div class="currency-select-group">
+                    <div class="currency-select-wrapper">
+                        <div class="currency-select-display" id="fromCurrencyDisplay">{{ from_code }}</div>
+                        <div class="currency-select-list" id="fromCurrencyList">
+                            {% for c in currencies %}
+                                <div class="currency-select-item" data-code="{{ c.code }}">{{ c.name }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p class="equals">⇄</p>
+                    <div class="currency-select-wrapper">
+                        <div class="currency-select-display" id="toCurrencyDisplay">{{ to_code }}</div>
+                        <div class="currency-select-list" id="toCurrencyList">
+                            {% for c in currencies %}
+                                <div class="currency-select-item" data-code="{{ c.code }}">{{ c.name }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="toAmount">Converted</label>
+                    <input type="text" id="toAmount" value="{{ result }}" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="update-info">Last Updated: <span id="lastUpdated">Loading...</span></p>
+    <script>
+        function updateConversion() {
+            var from = document.getElementById('fromCurrencyDisplay').textContent;
+            var to = document.getElementById('toCurrencyDisplay').textContent;
+            var amount = document.getElementById('fromAmount').value;
+            fetch(`/convert/?from=${from}&to=${to}&amount=${amount}`)
+                .then(resp => resp.json())
+                .then(data => {
+                    document.getElementById('toAmount').value = data.result;
+                });
+        }
+        document.getElementById('fromAmount').addEventListener('input', updateConversion);
+        // Custom dropdown logic
+        function setupCurrencyDropdown(displayId, listId, callback) {
+            var display = document.getElementById(displayId);
+            var list = document.getElementById(listId);
+            display.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.currency-select-list').forEach(function(l) { l.style.display = 'none'; });
+                list.style.display = 'block';
+            });
+            list.querySelectorAll('.currency-select-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    display.textContent = item.dataset.code;
+                    list.style.display = 'none';
+                    callback();
+                });
+            });
+        }
+        setupCurrencyDropdown('fromCurrencyDisplay', 'fromCurrencyList', updateConversion);
+        setupCurrencyDropdown('toCurrencyDisplay', 'toCurrencyList', updateConversion);
+        document.body.addEventListener('click', function() {
+            document.querySelectorAll('.currency-select-list').forEach(function(l) { l.style.display = 'none'; });
+        });
+        // Initial update
+        updateConversion();
+        // Last updated info
+        fetch('https://open.er-api.com/v6/latest/USD')
+            .then(resp => resp.json())
+            .then(data => {
+                document.getElementById('lastUpdated').textContent = data.time_last_update_utc;
+            });
+    </script>
+</body>
+</html>

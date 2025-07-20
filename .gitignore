@@ -1,0 +1,46 @@
+# .gitignore for what_da_nerkh project
+# Ignore Python bytecode
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environments
+.venv/
+venv/
+ENV/
+
+# Ignore SQLite database
+*.sqlite3
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore Django secret settings (if any)
+local_settings.py
+
+# Ignore sensitive data and config
+*.json
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore node modules (if any)
+node_modules/
+
+# Ignore static build files
+staticfiles/
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore GitHub workflows secrets
+.github/
+
+# Ignore migrations
+**/migrations/*
+!**/migrations/__init__.py

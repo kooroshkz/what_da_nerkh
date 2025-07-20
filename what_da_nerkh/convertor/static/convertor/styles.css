@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #161623;
+    color: white;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 400px;
+}
+
+.card {
+    width: 100%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    margin: 15px 0;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
+input:focus {
+    outline: none;
+    border: 2px solid #ffffff;
+}
+
+.equals {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 10px 0;
+}
+
+.update-info {
+    margin-top: 20px;
+    font-size: 14px;
+    color: white;
+}
+
+
+.currency-select-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.currency-select-wrapper {
+    position: relative;
+    width: 45%;
+}
+.currency-select-display {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    transition: background 0.2s;
+}
+.currency-select-display:hover {
+    background: rgba(255,255,255,0.25);
+}
+.currency-select-list {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #23233a;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    z-index: 100;
+}
+.currency-select-item {
+    padding: 10px;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    transition: background 0.2s;
+}
+.currency-select-item:last-child {
+    border-bottom: none;
+}
+.currency-select-item:hover {
+    background: #2e2e4d;
+}
