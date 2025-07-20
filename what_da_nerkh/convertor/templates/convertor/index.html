@@ -21,18 +21,28 @@
                     <div class="currency-select-wrapper">
                         <div class="currency-select-display" id="fromCurrencyDisplay">{{ from_code }}</div>
                         <div class="currency-select-list" id="fromCurrencyList">
-                            {% for c in currencies %}
-                                <div class="currency-select-item" data-code="{{ c.code }}">{{ c.name }}</div>
-                            {% endfor %}
+                            <div class="currency-search-wrapper">
+                                <input type="text" id="fromCurrencySearch" class="currency-search" placeholder="Search currency..." autocomplete="off">
+                            </div>
+                            <div class="currency-items-container" id="fromCurrencyItems">
+                                {% for c in currencies %}
+                                    <div class="currency-select-item" data-code="{{ c.code }}" data-name="{{ c.name|lower }}">{{ c.name }}</div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                    <p class="equals">⇄</p>
+                    <p class="equals" id="swapButton">⇄</p>
                     <div class="currency-select-wrapper">
                         <div class="currency-select-display" id="toCurrencyDisplay">{{ to_code }}</div>
                         <div class="currency-select-list" id="toCurrencyList">
-                            {% for c in currencies %}
-                                <div class="currency-select-item" data-code="{{ c.code }}">{{ c.name }}</div>
-                            {% endfor %}
+                            <div class="currency-search-wrapper">
+                                <input type="text" id="toCurrencySearch" class="currency-search" placeholder="Search currency..." autocomplete="off">
+                            </div>
+                            <div class="currency-items-container" id="toCurrencyItems">
+                                {% for c in currencies %}
+                                    <div class="currency-select-item" data-code="{{ c.code }}" data-name="{{ c.name|lower }}">{{ c.name }}</div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,7 +53,6 @@
             </div>
         </div>
     </div>
-    <p class="update-info">Last Updated: <span id="lastUpdated">Loading...</span></p>
     <script>
         function updateConversion() {
             var from = document.getElementById('fromCurrencyDisplay').textContent;
@@ -56,36 +65,112 @@
                 });
         }
         document.getElementById('fromAmount').addEventListener('input', updateConversion);
-        // Custom dropdown logic
-        function setupCurrencyDropdown(displayId, listId, callback) {
-            var display = document.getElementById(displayId);
-            var list = document.getElementById(listId);
-            display.addEventListener('click', function(e) {
-                e.stopPropagation();
-                document.querySelectorAll('.currency-select-list').forEach(function(l) { l.style.display = 'none'; });
-                list.style.display = 'block';
+        
+        // Currency search functionality
+        function setupCurrencySearch(searchId, itemsContainerId) {
+            var searchInput = document.getElementById(searchId);
+            var itemsContainer = document.getElementById(itemsContainerId);
+            var allItems = itemsContainer.querySelectorAll('.currency-select-item');
+            
+            searchInput.addEventListener('input', function() {
+                var searchTerm = this.value.toLowerCase();
+                
+                allItems.forEach(function(item) {
+                    var currencyName = item.getAttribute('data-name');
+                    var currencyCode = item.getAttribute('data-code').toLowerCase();
+                    
+                    if (currencyName.includes(searchTerm) || currencyCode.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
             });
-            list.querySelectorAll('.currency-select-item').forEach(function(item) {
-                item.addEventListener('click', function() {
-                    display.textContent = item.dataset.code;
-                    list.style.display = 'none';
-                    callback();
+            
+            // Clear search when dropdown closes
+            searchInput.addEventListener('focus', function() {
+                this.value = '';
+                allItems.forEach(function(item) {
+                    item.style.display = 'block';
                 });
             });
         }
-        setupCurrencyDropdown('fromCurrencyDisplay', 'fromCurrencyList', updateConversion);
-        setupCurrencyDropdown('toCurrencyDisplay', 'toCurrencyList', updateConversion);
-        document.body.addEventListener('click', function() {
-            document.querySelectorAll('.currency-select-list').forEach(function(l) { l.style.display = 'none'; });
+        
+        // Custom dropdown logic
+        function setupCurrencyDropdown(displayId, listId, searchId, itemsContainerId, callback) {
+            var display = document.getElementById(displayId);
+            var list = document.getElementById(listId);
+            var searchInput = document.getElementById(searchId);
+            var itemsContainer = document.getElementById(itemsContainerId);
+            
+            display.addEventListener('click', function(e) {
+                e.stopPropagation();
+                // Close all other dropdowns
+                document.querySelectorAll('.currency-select-list').forEach(function(l) { 
+                    l.style.display = 'none'; 
+                });
+                // Open this dropdown and focus search
+                list.style.display = 'block';
+                setTimeout(function() {
+                    searchInput.focus();
+                }, 50);
+            });
+            
+            itemsContainer.querySelectorAll('.currency-select-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    display.textContent = item.dataset.code;
+                    list.style.display = 'none';
+                    searchInput.value = '';
+                    callback();
+                });
+            });
+            
+            // Prevent dropdown from closing when clicking on search input
+            searchInput.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+        
+        // Setup search functionality
+        setupCurrencySearch('fromCurrencySearch', 'fromCurrencyItems');
+        setupCurrencySearch('toCurrencySearch', 'toCurrencyItems');
+        
+        // Setup dropdowns
+        setupCurrencyDropdown('fromCurrencyDisplay', 'fromCurrencyList', 'fromCurrencySearch', 'fromCurrencyItems', updateConversion);
+        setupCurrencyDropdown('toCurrencyDisplay', 'toCurrencyList', 'toCurrencySearch', 'toCurrencyItems', updateConversion);
+        
+        // Swap currencies functionality
+        document.getElementById('swapButton').addEventListener('click', function() {
+            var fromDisplay = document.getElementById('fromCurrencyDisplay');
+            var toDisplay = document.getElementById('toCurrencyDisplay');
+            
+            // Get current values
+            var fromValue = fromDisplay.textContent;
+            var toValue = toDisplay.textContent;
+            
+            // Swap the values
+            fromDisplay.textContent = toValue;
+            toDisplay.textContent = fromValue;
+            
+            // Update conversion with new values
+            updateConversion();
+            
+            // Add visual feedback
+            this.style.transform = 'scale(1.2) rotate(180deg)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
         });
+        
+        // Close dropdowns when clicking outside
+        document.body.addEventListener('click', function() {
+            document.querySelectorAll('.currency-select-list').forEach(function(l) { 
+                l.style.display = 'none'; 
+            });
+        });
+        
         // Initial update
         updateConversion();
-        // Last updated info
-        fetch('https://open.er-api.com/v6/latest/USD')
-            .then(resp => resp.json())
-            .then(data => {
-                document.getElementById('lastUpdated').textContent = data.time_last_update_utc;
-            });
     </script>
 </body>
 </html>
