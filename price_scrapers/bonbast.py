@@ -1,70 +1,69 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 import json
 from datetime import datetime, timezone
-import time
 import os
-
-def clean_price(text):
-    return int(text.replace(",", "").replace(" ", ""))
+import subprocess
+import ast
 
 def get_currencies_bonbast():
-    options = Options()
-    options.add_argument('--headless')
-    driver = webdriver.Chrome(options=options)
-    driver.get("https://www.bon-bast.com/")
-    time.sleep(2)
-
     now_utc = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     result = {}
 
-    tables = driver.find_elements(By.CSS_SELECTOR, "table.table-condensed")
-
-    for table in tables:
-        rows = table.find_elements(By.TAG_NAME, "tr")[1:]
-
-        for row in rows:
-            tds = row.find_elements(By.TAG_NAME, "td")
-            if len(tds) < 4:
+    try:
+        # Run bonbast command and parse output
+        process_result = subprocess.run(
+            ["python", "-m", "bonbast", "export"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        
+        # Parse the Python dictionary output (not JSON)
+        bonbast_data = ast.literal_eval(process_result.stdout.strip())
+        
+        # Process only currency data (skip coins and gold)
+        currency_codes = {
+            "USD", "EUR", "GBP", "CHF", "CAD", "AUD", "SEK", "NOK", "RUB", 
+            "THB", "SGD", "HKD", "AZN", "AMD", "DKK", "AED", "JPY", "TRY", 
+            "CNY", "SAR", "INR", "MYR", "AFN", "KWD", "IQD", "BHD", "OMR", "QAR"
+        }
+        
+        for code, currency_data in bonbast_data.items():
+            if code not in currency_codes:
                 continue
-
-            try:
-                code = tds[0].find_element(By.TAG_NAME, "img").get_attribute("alt").upper().strip()
-            except Exception:
-                continue
-
-            name = tds[1].text.strip()
-
-            try:
-                sell = clean_price(tds[2].text)
-            except Exception:
-                sell = None
-
-            try:
-                buy = clean_price(tds[3].text)
-            except Exception:
-                buy = None
-
-            if "Armenian Dram" in name or code == "AMD":
+                
+            name = currency_data.get('name', '')
+            sell = currency_data.get('sell')
+            buy = currency_data.get('buy')
+            
+            # Apply price corrections based on currency
+            # The library already shows "10 Armenian Dram", "10 Japanese Yen", "100 Iraqi Dinar"
+            # So we need to divide by those amounts to get the actual per-unit rates
+            if code == "AMD":  # Armenian Dram (shown as "10 Armenian Dram")
                 if sell: sell = sell / 10
                 if buy: buy = buy / 10
-            if "Japanese Yen" in name or code == "JPY":
+                name = "Armenian Dram"  # Clean up the name
+            elif code == "JPY":  # Japanese Yen (shown as "10 Japanese Yen")
                 if sell: sell = sell / 10
                 if buy: buy = buy / 10
-            if "Iraqi Dinar" in name or code == "IQD":
+                name = "Japanese Yen"  # Clean up the name
+            elif code == "IQD":  # Iraqi Dinar (shown as "100 Iraqi Dinar")
                 if sell: sell = sell / 100
                 if buy: buy = buy / 100
+                name = "Iraqi Dinar"  # Clean up the name
 
             result[code] = {
-                "code": code,
-                "name": name,
                 "buy": buy,
                 "sell": sell,
                 "timestamp": now_utc
             }
+            
+    except Exception as e:
+        print(f"Error getting bonbast data: {e}")
+        return {
+            "updated_at": now_utc,
+            "currencies": {}
+        }
 
-    driver.quit()
     return {
         "updated_at": now_utc,
         "currencies": result
