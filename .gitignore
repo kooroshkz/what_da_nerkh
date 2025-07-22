@@ -38,8 +38,9 @@ staticfiles/
 .vscode/
 .idea/
 
-# Ignore GitHub workflows secrets
-.github/
+# Ignore GitHub secrets (but allow workflows)
+.github/secrets/
+.github/environments/
 
 # Ignore migrations
 **/migrations/*

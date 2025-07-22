@@ -1,0 +1,94 @@
+name: Scrape Bonbast Prices
+
+on:
+  schedule:
+    - cron: "40 9 * * *"  # Daily at 13:10 Tehran time (09:40 UTC)
+  workflow_dispatch:
+
+jobs:
+  scrape-bonbast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install dependencies
+        run: pip install selenium
+
+      - name: Run Bonbast scraper
+        run: |
+          echo "Running Bonbast scraper..."
+          python price_scrapers/bonbast.py
+          echo "Scraper finished, checking file changes..."
+          ls -l price_data | grep "bonbast" || echo "No bonbast files found!"
+        continue-on-error: false
+
+      - name: Validate data
+        run: |
+          cd price_data
+          echo "Validating Bonbast data..."
+          python data_validator.py
+        continue-on-error: false
+
+      - name: Send failure notification
+        if: failure()
+        run: |
+          echo "ERROR: BONBAST SCRAPER FAILED"
+          echo "Workflow failed at: $(TZ='Europe/Amsterdam' date '+%Y-%m-%d %H:%M:%S CET')"
+          echo "Repository: ${{ github.repository }}"
+          echo "Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "Check logs and fix manually."
+          exit 1
+
+      - name: Commit and push changes
+        if: success()
+        run: |
+          git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          
+          # Ensure file timestamps are updated (force git to detect changes)
+          find price_data -name "bonbast_*.json" -exec touch {} \;
+          
+          # Check if there are changes to commit
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Changes detected, committing..."
+            
+            CET_TIME=$(TZ='Europe/Amsterdam' date '+%Y-%m-%d %H:%M:%S')
+            
+            git add price_data/bonbast_*.json
+            git commit -m "Update Bonbast prices $CET_TIME CET"
+            
+            RETRY_COUNT=0
+            MAX_RETRIES=3
+            
+            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+              if git push origin HEAD; then
+                echo "Successfully pushed to repository"
+                break
+              else
+                RETRY_COUNT=$((RETRY_COUNT + 1))
+                echo "Push failed, attempt $RETRY_COUNT of $MAX_RETRIES"
+                
+                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                  echo "Pulling latest changes and retrying..."
+                  git pull --rebase origin HEAD
+                  sleep 5
+                else
+                  echo "All push attempts failed"
+                  exit 1
+                fi
+              fi
+            done
+          else
+            echo "No changes to commit"
+          fi

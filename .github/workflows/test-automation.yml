@@ -1,0 +1,84 @@
+name: Daily Automation Test
+
+on:
+  schedule:
+    - cron: "0 12 * * *"  # Daily test at 12:00 PM UTC (after scrapers)
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Check scraper health
+        run: |
+          echo "=== DAILY HEALTH CHECK ==="
+          echo "Check time: $(TZ='Europe/Amsterdam' date '+%Y-%m-%d %H:%M:%S CET')"
+          echo "Repository: ${{ github.repository }}"
+          echo "=========================="
+
+      - name: Validate all scraped data
+        run: |
+          cd price_data
+          python data_validator.py
+          
+      - name: Check data freshness
+        run: |
+          cd price_data
+          current_date=$(date '+%Y-%m-%d')
+          
+          for file in alanchand_live.json bonbast_live.json tgju_live.json; do
+            if [ -f "$file" ]; then
+              # Extract the date from the updated_at field
+              file_date=$(python3 -c "
+          import json
+          try:
+              with open('$file', 'r') as f:
+                  data = json.load(f)
+                  updated_at = data.get('updated_at', '')
+                  print(updated_at[:10])  # Extract YYYY-MM-DD part
+          except Exception as e:
+              print('error')
+              ")
+              
+              if [ "$file_date" = "$current_date" ]; then
+                echo "SUCCESS: $file is up to date ($file_date)"
+              else
+                echo "ERROR: $file is outdated! Last update: $file_date, Current: $current_date"
+                exit 1
+              fi
+            else
+              echo "ERROR: $file is missing!"
+              exit 1
+            fi
+          done
+
+      - name: Health check passed
+        run: |
+          echo "SUCCESS: ALL SCRAPERS ARE HEALTHY!"
+          echo "SUCCESS: All data files are present and valid"
+          echo "SUCCESS: All data is fresh (updated today)"
+          echo "SUCCESS: System is working correctly"
+
+      - name: Send health failure notification
+        if: failure()
+        run: |
+          echo "ERROR: HEALTH CHECK FAILED!"
+          echo "Health check failed at: $(TZ='Europe/Amsterdam' date '+%Y-%m-%d %H:%M:%S CET')"
+          echo "Repository: ${{ github.repository }}"
+          echo "Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo ""
+          echo "Possible issues:"
+          echo "- One or more scrapers failed to run today"
+          echo "- Data validation failed"
+          echo "- Data files are missing or outdated"
+          echo ""
+          echo "Check individual scraper workflows and fix issues manually."
+          exit 1
