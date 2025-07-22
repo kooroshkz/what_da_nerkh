@@ -22,12 +22,12 @@ body {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    max-width: 400px;
+    max-width: 900px;
 }
 
 .card {
     width: 100%;
-    padding: 20px;
+    padding: 40px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 15px;
@@ -36,31 +36,31 @@ body {
 }
 
 h2 {
-    font-size: 26px;
-    margin-bottom: 10px;
-}
-
-h3 {
-    font-size: 18px;
+    font-size: 32px;
     margin-bottom: 15px;
 }
 
+h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
 .input-group {
-    margin: 15px 0;
+    margin: 20px 0;
 }
 
 label {
     display: block;
-    font-size: 16px;
-    margin-bottom: 5px;
+    font-size: 18px;
+    margin-bottom: 8px;
 }
 
 input {
     width: 100%;
-    padding: 10px;
+    padding: 15px;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 18px;
     text-align: center;
 }
 
@@ -70,20 +70,20 @@ input:focus {
 }
 
 .equals {
-    font-size: 24px;
+    font-size: 32px;
     font-weight: bold;
     color: #ffffff;
-    margin: 10px 0;
+    margin: 15px 0;
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease;
-    padding: 8px;
+    padding: 12px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 40px;
-    min-height: 40px;
+    min-width: 50px;
+    min-height: 50px;
 }
 
 .equals:hover {
@@ -105,11 +105,11 @@ input:focus {
 }
 .currency-select-display {
     width: 100%;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 8px;
     background: rgba(255,255,255,0.15);
     color: white;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
     text-align: center;
     border: none;
@@ -183,4 +183,54 @@ input:focus {
 }
 .currency-select-item:hover {
     background: #2e2e4d;
+}
+
+/* Mobile responsiveness - keep original size for mobile phones */
+@media (max-width: 768px) {
+    .container {
+        max-width: 400px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    h2 {
+        font-size: 26px;
+        margin-bottom: 10px;
+    }
+    
+    h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .input-group {
+        margin: 15px 0;
+    }
+    
+    label {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    input {
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .equals {
+        font-size: 24px;
+        margin: 10px 0;
+        padding: 8px;
+        min-width: 40px;
+        min-height: 40px;
+    }
+    
+    .currency-select-display {
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+    }
 }
