@@ -18,9 +18,6 @@ ENV/
 # Ignore Django secret settings (if any)
 local_settings.py
 
-# Ignore sensitive data and config
-*.json
-
 # Ignore OS files
 .DS_Store
 Thumbs.db

@@ -1,0 +1,201 @@
+{
+  "updated_at": "2025-07-22T19:54:27+00:00",
+  "currencies": {
+    "USD": {
+      "code": "USD",
+      "name": "US Dollar",
+      "buy": 87670,
+      "sell": 88200,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "EUR": {
+      "code": "EUR",
+      "name": "Euro",
+      "buy": 102600,
+      "sell": 103210,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "GBP": {
+      "code": "GBP",
+      "name": "British Pound",
+      "buy": 117800,
+      "sell": 118940,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "CHF": {
+      "code": "CHF",
+      "name": "Swiss Franc",
+      "buy": 109600,
+      "sell": 110620,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "CAD": {
+      "code": "CAD",
+      "name": "Canadian Dollar",
+      "buy": 63830,
+      "sell": 64470,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "AUD": {
+      "code": "AUD",
+      "name": "Australian Dollar",
+      "buy": 56890,
+      "sell": 57460,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "SEK": {
+      "code": "SEK",
+      "name": "Swedish Krona",
+      "buy": 9025,
+      "sell": 9200,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "NOK": {
+      "code": "NOK",
+      "name": "Norwegian Krone",
+      "buy": 8480,
+      "sell": 8670,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "RUB": {
+      "code": "RUB",
+      "name": "Russian Ruble",
+      "buy": 1105,
+      "sell": 1125,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "THB": {
+      "code": "THB",
+      "name": "Thai Baht",
+      "buy": 2675,
+      "sell": 2730,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "SGD": {
+      "code": "SGD",
+      "name": "Singapore Dollar",
+      "buy": 67790,
+      "sell": 68820,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "HKD": {
+      "code": "HKD",
+      "name": "Hong Kong Dollar",
+      "buy": 11020,
+      "sell": 11240,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "AZN": {
+      "code": "AZN",
+      "name": "Azerbaijani Manat",
+      "buy": 51070,
+      "sell": 51840,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "AMD": {
+      "code": "AMD",
+      "name": "10Armenian Dram",
+      "buy": 226.5,
+      "sell": 231.0,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "DKK": {
+      "code": "DKK",
+      "name": "Danish Krone",
+      "buy": 13490,
+      "sell": 13830,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "AED": {
+      "code": "AED",
+      "name": "UAE Dirham",
+      "buy": 24030,
+      "sell": 24270,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "JPY": {
+      "code": "JPY",
+      "name": "10Japanese Yen",
+      "buy": 588.0,
+      "sell": 600.0,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "TRY": {
+      "code": "TRY",
+      "name": "Turkish Lira",
+      "buy": 2165,
+      "sell": 2185,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "CNY": {
+      "code": "CNY",
+      "name": "Chinese Yuan",
+      "buy": 12050,
+      "sell": 12290,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "SAR": {
+      "code": "SAR",
+      "name": "KSA Riyal",
+      "buy": 23040,
+      "sell": 23510,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "INR": {
+      "code": "INR",
+      "name": "Indian Rupee",
+      "buy": 1005,
+      "sell": 1020,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "MYR": {
+      "code": "MYR",
+      "name": "Ringgit",
+      "buy": 20640,
+      "sell": 20840,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "AFN": {
+      "code": "AFN",
+      "name": "Afghan Afghani",
+      "buy": 1255,
+      "sell": 1280,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "KWD": {
+      "code": "KWD",
+      "name": "Kuwaiti Dinar",
+      "buy": 283100,
+      "sell": 288850,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "IQD": {
+      "code": "IQD",
+      "name": "100Iraqi Dinar",
+      "buy": 66.65,
+      "sell": 68.0,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "BHD": {
+      "code": "BHD",
+      "name": "Bahraini Dinar",
+      "buy": 230500,
+      "sell": 233980,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "OMR": {
+      "code": "OMR",
+      "name": "Omani Rial",
+      "buy": 225300,
+      "sell": 229390,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    },
+    "QAR": {
+      "code": "QAR",
+      "name": "Qatari Riyal",
+      "buy": 23740,
+      "sell": 24220,
+      "timestamp": "2025-07-22T19:54:27+00:00"
+    }
+  }
+}
