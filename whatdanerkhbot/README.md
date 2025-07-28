@@ -1,25 +1,12 @@
-# What Da Nerkh Bot 🏦
+# What Da Nerkh Telegram Bot
+### Free Open Source Tier
 
-A Telegram bot for real-time currency conversion with special support for Iranian Toman (IRT) using Bonbast and global exchange APIs.
-
-## Features 💫
-
-- **Real-time currency conversion** for 18+ major currencies
-- **Special IRT support** using Bonbast for accurate Iranian market rates
-- **Hybrid fallback system** via EUR/USD when direct conversion unavailable
-- **Clean and intuitive** inline keyboard interface
-- **Error handling** with detailed user feedback
-- **Formatted results** with proper decimal places and thousands separators
-
-## Supported Currencies 💰
-
-IRT, USD, EUR, GBP, TRY, AED, CAD, AUD, CHF, JPY, CNY, RUB, SAR, INR, KWD, QAR, OMR, BHD, SEK, NOK
+A Telegram bot for real-time currency conversion with special support for Iranian Toman (IRT) using Bonbast and EchangeRate-API.
 
 ## Architecture 🏗️
 
 - `bot.py` - Main Telegram bot interface and user interaction
 - `currency_converter.py` - Currency conversion logic and API handling
-- Clean separation of concerns for maintainability
 
 ## Setup 🚀
 
@@ -43,42 +30,49 @@ Or use the setup script:
 ./setup.sh
 ```
 
-## How It Works 🔄
+## Deploy and running in background
 
-### For IRT Conversions:
-1. **Primary:** Direct conversion using Bonbast API
-2. **Fallback 1:** Convert via EUR (source → EUR → IRT or IRT → EUR → target)
-3. **Fallback 2:** Convert via USD (source → USD → IRT or IRT → USD → target)
+#### **1. Systemd service file location**
 
-### For Non-IRT Conversions:
-- Uses open.er-api.com for global exchange rates
+* **Path:** `/etc/systemd/system/whatdanerkhbot.service`
+
+#### **2. Basic Commands**
+
+| Action                      | Command                                 |
+| --------------------------- | --------------------------------------- |
+| **Start the bot**           | `sudo systemctl start whatdanerkhbot`   |
+| **Stop the bot**            | `sudo systemctl stop whatdanerkhbot`    |
+| **Restart (after updates)** | `sudo systemctl restart whatdanerkhbot` |
+| **Check if running**        | `sudo systemctl status whatdanerkhbot`  |
+| **Live logs (follow):**     | `journalctl -u whatdanerkhbot -f`       |
+| **Full logs (scroll):**     | `journalctl -u whatdanerkhbot`          |
+
+#### **3. After Editing Service File**
+
+If you ever change the `.service` file:
+
+```bash
+sudo systemctl daemon-reexec
+sudo systemctl restart whatdanerkhbot
+```
+
+
 
 ## Commands 📋
 
 - `/start` - Start currency conversion
 - `/help` - Show help message
 
-## Dependencies 📦
-
-- `python-telegram-bot` - Telegram Bot API wrapper
-- `requests` - HTTP requests for exchange rate APIs
-- `bonbast` - Iranian exchange rate data
-
-## Error Handling 🛡️
+## Error Handling
 
 - Network timeouts and connection errors
 - Invalid currency pairs
 - API failures with graceful fallbacks
 - User input validation
 
-## Contributing 🤝
+## Contributing
 
 Feel free to contribute by:
-- Adding more currencies
 - Improving error handling
 - Adding new features
 - Fixing bugs
-
-## License 📄
-
-This project is open source and available under the MIT License.
