@@ -1,0 +1,8 @@
+{
+  "12345": {
+    "default_pair": {
+      "from": "EUR",
+      "to": "IRT"
+    }
+  }
+}

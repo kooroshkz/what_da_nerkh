@@ -149,6 +149,96 @@ def format_result(result, target_currency):
         # For other currencies, show up to 4 decimals, removing trailing zeros
         return f"{result:,.4f}".rstrip('0').rstrip('.')
 
+def convert_currency_with_rate(amount, from_code, to_code):
+    """
+    Main conversion logic - prioritizes Bonbast for IRT conversions
+    
+    Args:
+        amount (float): Amount to convert
+        from_code (str): Source currency code
+        to_code (str): Target currency code
+    
+    Returns:
+        tuple: (formatted_result, conversion_rate) or (None, None) if conversion failed
+    """
+    
+    if from_code == to_code:
+        return format_result(amount, to_code), 1.0
+    
+    logger.info(f"Converting {amount} {from_code} to {to_code}")
+    
+    # Case 1: Direct IRT conversions using Bonbast
+    if from_code == "IRT" or to_code == "IRT":
+        bonbast_rate = get_bonbast_rate(from_code, to_code)
+        if bonbast_rate:
+            result = round(amount * bonbast_rate, 4)
+            logger.info(f"Bonbast conversion successful: {amount} {from_code} = {result} {to_code}")
+            return format_result(result, to_code), bonbast_rate
+        
+        # Case 2: Fallback for IRT conversions via EUR
+        logger.info("Direct Bonbast conversion failed, trying via EUR")
+        
+        if to_code == "IRT":
+            # Convert from_code to EUR first, then EUR to IRT
+            eur_rate = get_live_rate(from_code, "EUR")
+            if eur_rate:
+                eur_amount = amount * eur_rate
+                irt_rate = get_bonbast_rate("EUR", "IRT")
+                if irt_rate:
+                    result = round(eur_amount * irt_rate, 4)
+                    combined_rate = eur_rate * irt_rate
+                    logger.info(f"EUR fallback conversion successful: {amount} {from_code} = {result} {to_code}")
+                    return format_result(result, to_code), combined_rate
+                    
+        elif from_code == "IRT":
+            # Convert IRT to EUR first, then EUR to to_code
+            eur_rate = get_bonbast_rate("IRT", "EUR")
+            if eur_rate:
+                eur_amount = amount * eur_rate
+                target_rate = get_live_rate("EUR", to_code)
+                if target_rate:
+                    result = round(eur_amount * target_rate, 4)
+                    combined_rate = eur_rate * target_rate
+                    logger.info(f"EUR fallback conversion successful: {amount} {from_code} = {result} {to_code}")
+                    return format_result(result, to_code), combined_rate
+        
+        # Case 3: USD fallback for IRT conversions
+        logger.info("EUR fallback failed, trying via USD")
+        
+        if to_code == "IRT":
+            # Convert from_code to USD first, then USD to IRT
+            usd_rate = get_live_rate(from_code, "USD")
+            if usd_rate:
+                usd_amount = amount * usd_rate
+                irt_rate = get_bonbast_rate("USD", "IRT")
+                if irt_rate:
+                    result = round(usd_amount * irt_rate, 4)
+                    combined_rate = usd_rate * irt_rate
+                    logger.info(f"USD fallback conversion successful: {amount} {from_code} = {result} {to_code}")
+                    return format_result(result, to_code), combined_rate
+                    
+        elif from_code == "IRT":
+            # Convert IRT to USD first, then USD to to_code
+            usd_rate = get_bonbast_rate("IRT", "USD")
+            if usd_rate:
+                usd_amount = amount * usd_rate
+                target_rate = get_live_rate("USD", to_code)
+                if target_rate:
+                    result = round(usd_amount * target_rate, 4)
+                    combined_rate = usd_rate * target_rate
+                    logger.info(f"USD fallback conversion successful: {amount} {from_code} = {result} {to_code}")
+                    return format_result(result, to_code), combined_rate
+    
+    # Case 4: Global pairs (non-IRT)
+    rate = get_live_rate(from_code, to_code)
+    if rate:
+        result = round(amount * rate, 4)
+        logger.info(f"Global conversion successful: {amount} {from_code} = {result} {to_code}")
+        return format_result(result, to_code), rate
+    
+    logger.error(f"All conversion methods failed for {amount} {from_code} to {to_code}")
+    return None, None
+
 def convert_currency(amount, from_code, to_code):
     """
     Main conversion logic - prioritizes Bonbast for IRT conversions
